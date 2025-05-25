@@ -52,6 +52,7 @@ Add the following to your workflow file:
 | `use_bedrock`       | Use Amazon Bedrock with OIDC authentication instead of direct Anthropic API                       | No       | 'false'                      |
 | `use_vertex`        | Use Google Vertex AI with OIDC authentication instead of direct Anthropic API                     | No       | 'false'                      |
 | `use_node_cache`    | Whether to use Node.js dependency caching (set to true only for Node.js projects with lock files) | No       | 'false'                      |
+| `skip_claude_install` | Skip Claude Code installation (use when Claude is pre-installed on self-hosted runner)          | No       | 'false'                      |
 
 \*Either `prompt` or `prompt_file` must be provided, but not both.
 
@@ -221,6 +222,48 @@ Use provider-specific model names based on your chosen provider:
     model: "claude-3-7-sonnet@20250219"
     use_vertex: "true"
 ```
+
+## Example: Using Pre-installed Claude with Self-Hosted Runner
+
+If you're using a self-hosted runner with Claude Code pre-installed and authenticated (e.g., via Claude Max subscription), you can skip the API key requirement:
+
+```yaml
+name: Claude Code with Pre-installed Authentication
+
+on:
+  workflow_dispatch:
+    inputs:
+      prompt:
+        description: 'Prompt for Claude'
+        required: true
+
+jobs:
+  claude-max:
+    # Use self-hosted runner with pre-installed Claude Code
+    runs-on: self-hosted
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Claude Code
+        uses: anthropics/claude-code-base-action@beta
+        with:
+          # Skip Claude installation - use pre-installed version
+          skip_claude_install: true
+          
+          # No API key needed - using existing Claude Max authentication
+          # anthropic_api_key: not required
+          
+          prompt: ${{ github.event.inputs.prompt }}
+          allowed_tools: "Bash(git:*),View,GlobTool,GrepTool,BatchTool"
+          max_turns: "10"
+          timeout_minutes: "15"
+```
+
+**Note**: This approach requires:
+1. A self-hosted runner with Claude Code pre-installed
+2. Claude Code authenticated via Claude Max or other methods
+3. Setting `skip_claude_install: true` to use the existing installation
 
 ## Example: Using OIDC Authentication for AWS Bedrock
 

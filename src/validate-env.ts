@@ -16,9 +16,10 @@ export function validateEnvironmentVariables() {
   }
 
   if (!useBedrock && !useVertex) {
+    // API key is now optional - can use existing Claude authentication
     if (!anthropicApiKey) {
-      errors.push(
-        "ANTHROPIC_API_KEY is required when using direct Anthropic API.",
+      console.warn(
+        "ANTHROPIC_API_KEY not provided. Will attempt to use existing Claude authentication.",
       );
     }
   } else if (useBedrock) {

@@ -89,6 +89,7 @@ export async function runClaude(promptPath: string, options: ClaudeOptions) {
 
   const claudeProcess = spawn("claude", config.claudeArgs, {
     stdio: ["pipe", "pipe", "inherit"],
+    env: process.env, // Pass all environment variables to the Claude process
   });
 
   // Handle Claude process errors

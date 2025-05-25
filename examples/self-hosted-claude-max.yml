@@ -1,0 +1,33 @@
+name: Claude Code with Pre-installed Authentication
+
+on:
+  workflow_dispatch:
+    inputs:
+      prompt:
+        description: 'Prompt for Claude'
+        required: true
+        type: string
+
+jobs:
+  claude-max:
+    # Use self-hosted runner with pre-installed Claude Code authenticated via Claude Max
+    runs-on: self-hosted
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Claude Code
+        uses: anthropics/claude-code-base-action@main
+        with:
+          # Skip Claude installation - use pre-installed version
+          skip_claude_install: true
+          
+          # No API key needed - using existing Claude Max authentication
+          # anthropic_api_key: not required
+          
+          prompt: ${{ github.event.inputs.prompt }}
+          
+          # Optional: specify tools and other parameters
+          allowed_tools: "read,edit,bash"
+          max_turns: "10"
+          timeout_minutes: "15"
