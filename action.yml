@@ -61,6 +61,10 @@ inputs:
     description: "Whether to use Node.js dependency caching (set to true only for Node.js projects with lock files)"
     required: false
     default: "false"
+  skip_api_key_check:
+    description: "Skip API key validation and use existing Claude authentication (e.g., Claude Max on self-hosted runner)"
+    required: false
+    default: "false"
 
 outputs:
   conclusion:
@@ -110,6 +114,7 @@ runs:
         INPUT_MAX_TURNS: ${{ inputs.max_turns }}
         INPUT_MCP_CONFIG: ${{ inputs.mcp_config }}
         INPUT_TIMEOUT_MINUTES: ${{ inputs.timeout_minutes }}
+        INPUT_SKIP_API_KEY_CHECK: ${{ inputs.skip_api_key_check }}
 
         # Provider configuration
         ANTHROPIC_API_KEY: ${{ inputs.anthropic_api_key }}

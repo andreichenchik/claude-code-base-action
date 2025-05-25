@@ -87,8 +87,11 @@ export async function runClaude(promptPath: string, options: ClaudeOptions) {
     pipeStream.destroy();
   });
 
+  // Only pass all env variables when skip_api_key_check is true
+  const skipApiKeyCheck = process.env.INPUT_SKIP_API_KEY_CHECK === "true";
   const claudeProcess = spawn("claude", config.claudeArgs, {
     stdio: ["pipe", "pipe", "inherit"],
+    ...(skipApiKeyCheck && { env: process.env }),
   });
 
   // Handle Claude process errors

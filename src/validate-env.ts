@@ -6,6 +6,7 @@ export function validateEnvironmentVariables() {
   const useBedrock = process.env.CLAUDE_CODE_USE_BEDROCK === "1";
   const useVertex = process.env.CLAUDE_CODE_USE_VERTEX === "1";
   const anthropicApiKey = process.env.ANTHROPIC_API_KEY;
+  const skipApiKeyCheck = process.env.INPUT_SKIP_API_KEY_CHECK === "true";
 
   const errors: string[] = [];
 
@@ -16,9 +17,14 @@ export function validateEnvironmentVariables() {
   }
 
   if (!useBedrock && !useVertex) {
-    if (!anthropicApiKey) {
+    // Check API key only if skip_api_key_check is not true
+    if (!anthropicApiKey && !skipApiKeyCheck) {
       errors.push(
         "ANTHROPIC_API_KEY is required when using direct Anthropic API.",
+      );
+    } else if (!anthropicApiKey && skipApiKeyCheck) {
+      console.warn(
+        "ANTHROPIC_API_KEY not provided. Using existing Claude authentication.",
       );
     }
   } else if (useBedrock) {
