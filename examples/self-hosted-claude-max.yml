@@ -19,8 +19,8 @@ jobs:
       - name: Run Claude Code
         uses: anthropics/claude-code-base-action@main
         with:
-          # Skip Claude installation - use pre-installed version
-          skip_claude_install: true
+          # Skip API key validation - use existing Claude authentication
+          skip_api_key_check: true
           
           # No API key needed - using existing Claude Max authentication
           # anthropic_api_key: not required

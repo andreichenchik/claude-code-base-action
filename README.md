@@ -52,7 +52,7 @@ Add the following to your workflow file:
 | `use_bedrock`       | Use Amazon Bedrock with OIDC authentication instead of direct Anthropic API                       | No       | 'false'                      |
 | `use_vertex`        | Use Google Vertex AI with OIDC authentication instead of direct Anthropic API                     | No       | 'false'                      |
 | `use_node_cache`    | Whether to use Node.js dependency caching (set to true only for Node.js projects with lock files) | No       | 'false'                      |
-| `skip_claude_install` | Skip Claude Code installation (use when Claude is pre-installed on self-hosted runner)          | No       | 'false'                      |
+| `skip_api_key_check` | Skip API key validation and use existing Claude authentication (e.g., Claude Max on self-hosted runner) | No       | 'false'                      |
 
 \*Either `prompt` or `prompt_file` must be provided, but not both.
 
@@ -248,8 +248,8 @@ jobs:
       - name: Run Claude Code
         uses: anthropics/claude-code-base-action@beta
         with:
-          # Skip Claude installation - use pre-installed version
-          skip_claude_install: true
+          # Skip API key validation - use existing Claude authentication
+          skip_api_key_check: true
           
           # No API key needed - using existing Claude Max authentication
           # anthropic_api_key: not required
@@ -263,7 +263,7 @@ jobs:
 **Note**: This approach requires:
 1. A self-hosted runner with Claude Code pre-installed
 2. Claude Code authenticated via Claude Max or other methods
-3. Setting `skip_claude_install: true` to use the existing installation
+3. Setting `skip_api_key_check: true` to use the existing authentication
 
 ## Example: Using OIDC Authentication for AWS Bedrock
 
